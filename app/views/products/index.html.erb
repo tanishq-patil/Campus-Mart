@@ -4,12 +4,23 @@
 
 <h1>Products</h1>
 
+<%= form_with url: products_path, method: :get, local: true, class: "mb-3" do |form| %>
+  <div class="d-flex gap-2">
+    <%= form.text_field :q, value: params[:q], placeholder: "Search products", class: "form-control" %>
+    <%= form.submit "Search", class: "btn btn-primary" %>
+  </div>
+<% end %>
+
 <div id="products">
-  <% @products.each do |product| %>
-    <%= render product %>
-    <p>
-      <%= link_to "Show this product", product %>
-    </p>
+  <% if @products.empty? %>
+    <p>No products found.</p>
+  <% else %>
+    <% @products.each do |product| %>
+      <%= render product %>
+      <p>
+        <%= link_to "Show this product", product %>
+      </p>
+    <% end %>
   <% end %>
 </div>
 

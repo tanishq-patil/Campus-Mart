@@ -10,6 +10,17 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should filter products by search query" do
+    Product.create!(name: "Laptop", categorie: "Electronics", price: 999.99)
+    Product.create!(name: "Book", categorie: "Education", price: 19.99)
+
+    get products_url, params: { q: "lap" }
+
+    assert_response :success
+    assert_select ".product-card", 1
+    assert_select ".product-card", /Laptop/
+  end
+
   test "should get new" do
     get new_product_url
     assert_response :success
