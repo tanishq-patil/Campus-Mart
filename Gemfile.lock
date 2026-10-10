@@ -369,7 +369,7 @@ DEPENDENCIES
   debug
   importmap-rails
   jbuilder
-  json (< 3.0)
+  json (< 3.0.0)
   kamal
   propshaft
   puma (>= 5.0)
