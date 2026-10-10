@@ -1,28 +1,128 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Campus Mart" %></title>
+    <title><%= content_for(:title) || "Campus Mart - Your Student Marketplace" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= yield :head %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+    <%= yield :head %>
 
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%# Includes stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <%= yield %>
+    <!-- Top Navigation -->
+    <header class="cm-navbar">
+      <div class="cm-nav-container">
+        <%= link_to root_path, class: "cm-logo" do %>
+          <div class="cm-logo-icon">🎓</div>
+          <span>Campus<span class="cm-logo-highlight">Mart</span></span>
+        <% end %>
+
+        <nav class="cm-nav-links">
+          <%= link_to "Home", root_path, class: "cm-nav-link #{'active' if current_page?(root_path)}" %>
+          <%= link_to "All products", products_path, class: "cm-nav-link #{'active' if current_page?(products_path)}" %>
+          <%= link_to "All Orders", orders_path, class: "cm-nav-link #{'active' if current_page?(orders_path)}" rescue link_to "All Orders", products_path, class: "cm-nav-link" %>
+        </nav>
+
+        <div class="cm-nav-actions">
+          <% if authenticated? && Current.user %>
+            <div class="cm-user-menu">
+              <span class="cm-user-greeting">
+                <span class="cm-user-avatar"><%= Current.user.name[0..1].upcase rescue "ST" %></span>
+                <span class="cm-user-name"><%= Current.user.name %></span>
+              </span>
+              <%= link_to new_product_path, class: "cm-btn cm-btn-primary cm-btn-sm" do %>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>+ Sell</span>
+              <% end %>
+              <%= button_to "Sign Out", logout_path, method: :delete, class: "cm-btn cm-btn-secondary cm-btn-sm" %>
+            </div>
+          <% else %>
+            <%= link_to "Sign In", login_path, class: "cm-btn cm-btn-secondary cm-btn-sm" %>
+            <%= link_to "Sign Up", signup_path, class: "cm-btn cm-btn-primary cm-btn-sm" %>
+          <% end %>
+        </div>
+      </div>
+    </header>
+
+    <!-- Global Flash Alerts -->
+    <% if flash[:notice] && !current_page?(login_path) && !current_page?(signup_path) %>
+      <div class="cm-flash-bar cm-flash-notice">
+        <div class="cm-flash-inner">
+          <span>✓ <%= flash[:notice] %></span>
+        </div>
+      </div>
+    <% end %>
+
+    <% if flash[:alert] && !current_page?(login_path) && !current_page?(signup_path) %>
+      <div class="cm-flash-bar cm-flash-alert">
+        <div class="cm-flash-inner">
+          <span>⚠️ <%= flash[:alert] %></span>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Main Content Yield -->
+    <main>
+      <%= yield %>
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="cm-footer">
+      <div class="cm-footer-inner">
+        <div class="cm-footer-top">
+          <div class="cm-footer-brand">
+            <div class="cm-logo">
+              <div class="cm-logo-icon">🎓</div>
+              <span>Campus<span class="cm-logo-highlight">Mart</span></span>
+            </div>
+            <p class="cm-footer-tagline">
+              The peer-to-peer campus marketplace. Discover affordable student essentials, sell items you don't need, and meet safely on campus.
+            </p>
+          </div>
+          <div class="cm-footer-links-group">
+            <div class="cm-footer-col">
+              <h4>Quick Links</h4>
+              <ul>
+                <li><%= link_to "All products", products_path %></li>
+                <li><%= link_to "All Orders", orders_path rescue link_to "All Orders", products_path %></li>
+                <li><%= link_to "Post New Listing", new_product_path %></li>
+              </ul>
+            </div>
+            <div class="cm-footer-col">
+              <h4>Account & Security</h4>
+              <ul>
+                <% if authenticated? && Current.user %>
+                  <li><span style="color: var(--cm-primary); font-weight: 600;">Signed in as <%= Current.user.name %></span></li>
+                  <li><%= button_to "Sign Out", logout_path, method: :delete, style: "background:none;border:none;padding:0;color:var(--cm-text-muted);cursor:pointer;font-size:0.9rem;" %></li>
+                <% else %>
+                  <li><%= link_to "Sign In", login_path %></li>
+                  <li><%= link_to "Create Student Account", signup_path %></li>
+                <% end %>
+                <li><a href="#how-it-works">Safe Meetup Tips</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="cm-footer-bottom">
+          <p>© <%= Time.current.year %> Campus Mart • Built for Student Life</p>
+          <p>Verified Student Network • Zero Commission</p>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

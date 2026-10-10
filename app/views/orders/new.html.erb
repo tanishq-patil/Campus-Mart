@@ -1,11 +1,18 @@
-<% content_for :title, "New order" %>
+<% content_for :title, "New Order - Campus Mart" %>
 
-<h1>New order</h1>
+<div class="cm-auth-container" style="min-height: auto; padding: 2.5rem 1.5rem 4rem;">
+  <div class="cm-auth-card" style="max-width: 620px;">
+    <div class="cm-auth-header" style="text-align: left; border-bottom: 1px solid var(--cm-border); padding-bottom: 1.25rem;">
+      <span class="cm-section-tag">Campus Checkout</span>
+      <h2 class="cm-auth-title" style="font-size: 1.85rem;">Place New Order</h2>
+      <p class="cm-auth-subtitle">Select campus products and quantities for safe handoff</p>
+    </div>
 
-<%= render "form", order: @order %>
+    <%= render "form", order: @order %>
 
-<br>
-
-<div>
-  <%= link_to "Back to orders", orders_path %>
+    <div class="cm-auth-footer" style="display: flex; justify-content: space-between; align-items: center; text-align: left;">
+      <%= link_to "← Back to Orders", orders_path, class: "cm-text-muted" %>
+      <%= link_to "Browse All Products", products_path, class: "cm-auth-link" %>
+    </div>
+  </div>
 </div>

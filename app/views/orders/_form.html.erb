@@ -1,9 +1,8 @@
-<%= form_with(model: order) do |form| %>
+<%= form_with(model: order, class: "cm-auth-form") do |form| %>
   <% if order.errors.any? %>
-    <div style="color: red">
-      <h2><%= pluralize(order.errors.count, "error") %> prohibited this order from being saved:</h2>
-
-      <ul>
+    <div class="cm-alert cm-alert-error">
+      <strong><%= pluralize(order.errors.count, "error") %> prohibited this order from being placed:</strong>
+      <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
         <% order.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -11,17 +10,62 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :total, style: "display: block" %>
-    <%= form.text_field :total %>
+  <!-- Buyer Information -->
+  <div class="cm-form-group">
+    <label class="cm-label">Buyer / Campus Student</label>
+    <% if Current.user %>
+      <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; background: var(--cm-surface-subtle); border-radius: var(--cm-radius-md); border: 1px solid var(--cm-border);">
+        <div class="cm-user-avatar" style="width: 32px; height: 32px;"><%= Current.user.name[0..1].upcase %></div>
+        <div>
+          <div style="font-weight: 700; color: var(--cm-text-main);"><%= Current.user.name %></div>
+          <div style="font-size: 0.8rem; color: var(--cm-text-muted);"><%= Current.user.email_address %></div>
+        </div>
+      </div>
+      <%= form.hidden_field :user_id, value: Current.user.id %>
+    <% elsif User.any? %>
+      <%= form.collection_select :user_id, User.all, :id, :name, { prompt: "Select student account..." }, class: "cm-input", required: true %>
+      <span class="cm-field-hint">Or <%= link_to "Sign In", login_path %> to order with your student profile</span>
+    <% else %>
+      <p class="cm-text-muted">No student profiles found. <%= link_to "Create an account", signup_path %></p>
+    <% end %>
   </div>
 
-  <div>
-    <%= form.label :user_id, style: "display: block" %>
-    <%= form.text_field :user_id %>
+  <!-- Order Items (Line Items) -->
+  <div class="cm-form-group" style="margin-top: 0.5rem;">
+    <label class="cm-label" style="font-size: 1rem; font-weight: 800;">Order Items</label>
+    
+    <% if @products.present? && @products.any? %>
+      <%= form.fields_for :line_items do |item_form| %>
+        <div style="background: var(--cm-surface); border: 1px solid var(--cm-border); border-radius: var(--cm-radius-md); padding: 1.25rem; margin-bottom: 0.75rem; box-shadow: var(--cm-shadow-sm);">
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+            <div>
+              <%= item_form.label :product_id, "Product", class: "cm-label" %>
+              <%= item_form.collection_select :product_id, @products, :id, ->(p) { "#{p.name} ($#{sprintf('%.2f', p.price.to_f)}) - #{p.categorie}" }, { prompt: "Choose an available product..." }, class: "cm-input", required: true %>
+            </div>
+            <div>
+              <%= item_form.label :quantity, "Quantity", class: "cm-label" %>
+              <%= item_form.number_field :quantity, min: 1, value: (item_form.object.quantity || 1), class: "cm-input", required: true %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="cm-alert cm-alert-error">
+        No products currently listed. <%= link_to "List a product first →", new_product_path, style: "font-weight: 700; text-decoration: underline;" %>
+      </div>
+    <% end %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <!-- Optional Manual Total Override (if needed) -->
+  <% if order.persisted? %>
+    <div class="cm-form-group">
+      <%= form.label :total, "Total Amount ($)", class: "cm-label" %>
+      <%= form.text_field :total, class: "cm-input", placeholder: "Calculated automatically" %>
+      <span class="cm-field-hint">Leave blank to calculate automatically from items</span>
+    </div>
+  <% end %>
+
+  <div class="cm-form-actions" style="margin-top: 1.5rem;">
+    <%= form.submit (order.new_record? ? "Confirm & Place Order" : "Update Order"), class: "cm-btn cm-btn-primary cm-btn-block cm-btn-lg" %>
   </div>
 <% end %>

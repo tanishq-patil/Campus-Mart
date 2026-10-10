@@ -1,16 +1,79 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "All Products - Campus Mart" %>
 
-<% content_for :title, "Products" %>
+<section class="cm-section" style="padding-top: 3rem;">
+  <div class="cm-section-header">
+    <div>
+      <span class="cm-section-tag">Campus Marketplace</span>
+      <h1 class="cm-section-title">All Products</h1>
+      <p class="cm-section-desc">Browse student essentials, textbooks, electronics & dorm gear</p>
+    </div>
+    <%= link_to new_product_path, class: "cm-btn cm-btn-primary" do %>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      <span>+ Post New Listing</span>
+    <% end %>
+  </div>
 
-<h1>Products</h1>
-
-<div id="products">
-  <% @products.each do |product| %>
-    <%= render product %>
-    <p>
-      <%= link_to "Show this product", product %>
-    </p>
+  <% if notice.present? %>
+    <div class="cm-alert cm-alert-success" style="margin-bottom: 2rem;">
+      <span>✓ <%= notice %></span>
+    </div>
   <% end %>
-</div>
 
-<%= link_to "New product", new_product_path %>
+  <!-- Search & Category Filters -->
+  <div class="cm-filter-bar">
+    <div class="cm-category-pills">
+      <%= link_to "All Items", products_path, class: "cm-filter-pill #{'active' if params[:category].blank?}" %>
+      <%= link_to "📚 Textbooks", products_path(category: "Textbooks"), class: "cm-filter-pill #{'active' if params[:category] == 'Textbooks'}" %>
+      <%= link_to "💻 Electronics", products_path(category: "Electronics"), class: "cm-filter-pill #{'active' if params[:category] == 'Electronics'}" %>
+      <%= link_to "🛋️ Dorm", products_path(category: "Dorm"), class: "cm-filter-pill #{'active' if params[:category] == 'Dorm'}" %>
+      <%= link_to "🚲 Cycles", products_path(category: "Bikes"), class: "cm-filter-pill #{'active' if params[:category] == 'Bikes'}" %>
+      <%= link_to "👕 Apparel", products_path(category: "Apparel"), class: "cm-filter-pill #{'active' if params[:category] == 'Apparel'}" %>
+      <%= link_to "✏️ Stationery", products_path(category: "Stationery"), class: "cm-filter-pill #{'active' if params[:category] == 'Stationery'}" %>
+    </div>
+
+    <%= form_with url: products_path, method: :get, local: true, class: "cm-search-form" do |f| %>
+      <% if params[:category].present? %>
+        <%= f.hidden_field :category, value: params[:category] %>
+      <% end %>
+      <%= f.text_field :query, value: params[:query], placeholder: "Search products...", class: "cm-search-input" %>
+      <%= f.submit "Search", class: "cm-btn cm-btn-secondary cm-btn-sm" %>
+      <% if params[:query].present? || params[:category].present? %>
+        <%= link_to "Clear", products_path, class: "cm-btn cm-btn-secondary cm-btn-sm", style: "padding: 0.4rem 0.6rem;" %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <!-- Product Count Info -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <span style="font-size: 0.9rem; font-weight: 600; color: var(--cm-text-muted);">
+      Showing <%= @products.count %> <%= "item".pluralize(@products.count) %>
+      <% if params[:category].present? %> in <strong style="color: var(--cm-primary);"><%= params[:category] %></strong><% end %>
+      <% if params[:query].present? %> matching "<strong><%= params[:query] %></strong>"<% end %>
+    </span>
+  </div>
+
+  <!-- Products Grid -->
+  <% if @products.any? %>
+    <div id="products" class="cm-products-grid">
+      <%= render @products %>
+    </div>
+  <% else %>
+    <div style="background: var(--cm-surface); border: 1px dashed var(--cm-border); border-radius: var(--cm-radius-lg); padding: 4rem 2rem; text-align: center;">
+      <div style="font-size: 3.5rem; margin-bottom: 1rem;">🛍️</div>
+      <h3 style="font-size: 1.4rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--cm-text-main);">No Products Found</h3>
+      <p style="color: var(--cm-text-muted); margin-bottom: 1.75rem; max-width: 480px; margin-left: auto; margin-right: auto;">
+        <% if params[:category].present? || params[:query].present? %>
+          No products matched your search or category filter. Try clearing filters or searching for something else.
+        <% else %>
+          Be the first student to post an item for sale on Campus Mart!
+        <% end %>
+      </p>
+      <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+        <% if params[:category].present? || params[:query].present? %>
+          <%= link_to "View All Products", products_path, class: "cm-btn cm-btn-secondary" %>
+        <% end %>
+        <%= link_to "+ Post a Listing", new_product_path, class: "cm-btn cm-btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</section>

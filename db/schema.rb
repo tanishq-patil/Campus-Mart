@@ -10,7 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_10_104718) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_10_112952) do
+  create_table "line_items", force: :cascade do |t|
+    t.integer "order_id", null: false
+    t.integer "product_id", null: false
+    t.integer "quantity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_line_items_on_order_id"
+    t.index ["product_id"], name: "index_line_items_on_product_id"
+  end
+
   create_table "orders", force: :cascade do |t|
     t.decimal "total"
     t.integer "user_id", null: false
@@ -27,11 +37,26 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_10_104718) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "sessions", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "ip_address"
+    t.string "user_agent"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_sessions_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "email_address"
+    t.string "password_digest"
+    t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "line_items", "orders"
+  add_foreign_key "line_items", "products"
   add_foreign_key "orders", "users"
+  add_foreign_key "sessions", "users"
 end

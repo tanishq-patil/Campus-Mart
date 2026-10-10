@@ -1,9 +1,18 @@
 class ProductsController < ApplicationController
+  allow_unauthenticated_access only: %i[ index show ]
   before_action :set_product, only: %i[ show edit update destroy ]
 
   # GET /products or /products.json
   def index
     @products = Product.all
+    if params[:category].present? && params[:category] != "All"
+      @products = @products.where("LOWER(categorie) LIKE ?", "%#{params[:category].downcase}%")
+    end
+    if params[:query].present?
+      q = "%#{params[:query].downcase}%"
+      @products = @products.where("LOWER(name) LIKE ? OR LOWER(categorie) LIKE ?", q, q)
+    end
+    @products = @products.order(created_at: :desc)
   end
 
   # GET /products/1 or /products/1.json

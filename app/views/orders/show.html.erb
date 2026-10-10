@@ -1,10 +1,20 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Order ##{@order.id} - Campus Mart" %>
 
-<%= render @order %>
+<div class="cm-section" style="padding-top: 3rem;">
+  <div class="cm-section-header">
+    <div>
+      <span class="cm-section-tag">Order Details</span>
+      <h2 class="cm-section-title">Order #<%= @order.id %></h2>
+      <p class="cm-section-desc">Campus meetup and line item summary</p>
+    </div>
+    <div style="display: flex; gap: 0.75rem;">
+      <%= link_to "← Back to Orders", orders_path, class: "cm-btn cm-btn-secondary cm-btn-sm" %>
+      <%= link_to "Edit Order", edit_order_path(@order), class: "cm-btn cm-btn-secondary cm-btn-sm" %>
+      <%= button_to "Cancel Order", @order, method: :delete, class: "cm-btn cm-btn-secondary cm-btn-sm", style: "color: #dc2626 !important;" %>
+    </div>
+  </div>
 
-<div>
-  <%= link_to "Edit this order", edit_order_path(@order) %> |
-  <%= link_to "Back to orders", orders_path %>
-
-  <%= button_to "Destroy this order", @order, method: :delete %>
+  <div style="max-width: 800px; margin: 0 auto;">
+    <%= render @order %>
+  </div>
 </div>

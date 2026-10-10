@@ -1,0 +1,54 @@
+<% content_for :title, "Sign Up - Campus Mart" %>
+
+<div class="cm-auth-container">
+  <div class="cm-auth-card">
+    <div class="cm-auth-header">
+      <div class="cm-logo-icon" style="margin: 0 auto 1rem;">🎓</div>
+      <h2 class="cm-auth-title">Join Campus Mart</h2>
+      <p class="cm-auth-subtitle">Create your verified student marketplace account</p>
+    </div>
+
+    <% if @user.errors.any? %>
+      <div class="cm-alert cm-alert-error">
+        <strong>Please fix the following:</strong>
+        <ul style="margin-top: 0.5rem; padding-left: 1.25rem;">
+          <% @user.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= form_with model: @user, url: registration_path, method: :post, class: "cm-auth-form" do |form| %>
+      <div class="cm-form-group">
+        <%= form.label :name, "Your Full Name", class: "cm-label" %>
+        <%= form.text_field :name, required: true, autofocus: true, placeholder: "e.g. Alex Johnson", class: "cm-input" %>
+      </div>
+
+      <div class="cm-form-group">
+        <%= form.label :email_address, "Student Email Address", class: "cm-label" %>
+        <%= form.email_field :email_address, required: true, placeholder: "alex@university.edu", class: "cm-input" %>
+        <span class="cm-field-hint">Used to verify student status & coordinate handoffs</span>
+      </div>
+
+      <div class="cm-form-group">
+        <%= form.label :password, "Password", class: "cm-label" %>
+        <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Minimum 6 characters", class: "cm-input" %>
+      </div>
+
+      <div class="cm-form-group">
+        <%= form.label :password_confirmation, "Confirm Password", class: "cm-label" %>
+        <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Repeat your password", class: "cm-input" %>
+      </div>
+
+      <div class="cm-form-actions">
+        <%= form.submit "Create Student Account", class: "cm-btn cm-btn-primary cm-btn-block" %>
+      </div>
+    <% end %>
+
+    <div class="cm-auth-footer">
+      <p>Already have an account? <%= link_to "Sign in here", login_path, class: "cm-auth-link" %></p>
+      <p style="margin-top: 0.5rem;"><%= link_to "← Back to Marketplace", root_path, class: "cm-text-muted" %></p>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,388 @@
-<%= link_to "All products", products_path %>
-<br>
-<br>
-<%= link_to "All Orders", products_path %>
+<!-- Hero Section -->
+<section class="cm-hero">
+  <div class="cm-hero-bg-blobs">
+    <div class="cm-blob cm-blob-1"></div>
+    <div class="cm-blob cm-blob-2"></div>
+  </div>
+
+  <div class="cm-hero-content">
+    <% if authenticated? && Current.user %>
+      <div class="cm-badge">
+        <span>👋 Welcome back, <strong><%= Current.user.name %></strong>! Verified Student</span>
+      </div>
+    <% else %>
+      <div class="cm-badge">
+        <span>✨ The Official Student Marketplace</span>
+      </div>
+    <% end %>
+
+    <h1 class="cm-hero-title">
+      Buy, Sell & Trade <br>
+      <span class="cm-hero-title-highlight">Right On Your Campus</span>
+    </h1>
+
+    <p class="cm-hero-subtitle">
+      Connect directly with classmates to buy textbooks, dorm furniture, electronics, and bikes. 
+      No expensive shipping, zero fees, and hassle-free handoffs right at the library or dorms.
+    </p>
+
+    <!-- Main Navigation Action Links (Preserving & Highlighting User's Links) -->
+    <div class="cm-hero-actions">
+      <%= link_to products_path, class: "cm-btn cm-btn-primary cm-btn-lg" do %>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span>All products</span>
+      <% end %>
+
+      <%= link_to (defined?(orders_path) ? orders_path : products_path), class: "cm-btn cm-btn-secondary cm-btn-lg" do %>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <span>All Orders</span>
+      <% end %>
+
+      <% if authenticated? && Current.user %>
+        <%= link_to new_product_path, class: "cm-btn cm-btn-accent cm-btn-lg" do %>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>+ Post a Listing</span>
+        <% end %>
+      <% else %>
+        <%= link_to signup_path, class: "cm-btn cm-btn-accent cm-btn-lg" do %>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="8.5" cy="7" r="4"></circle>
+            <line x1="20" y1="8" x2="20" y2="14"></line>
+            <line x1="23" y1="11" x2="17" y2="11"></line>
+          </svg>
+          <span>Join Free</span>
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- Campus Trust Badges -->
+    <div class="cm-hero-stats">
+      <div class="cm-stat-item">
+        <span class="cm-stat-icon">✓</span>
+        <span>Verified Student Profiles</span>
+      </div>
+      <div class="cm-stat-item">
+        <span class="cm-stat-icon">⚡</span>
+        <span>Instant Campus Handoffs</span>
+      </div>
+      <div class="cm-stat-item">
+        <span class="cm-stat-icon">💰</span>
+        <span>0% Seller Fees</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Quick Navigation Hub: Highlight Cards for All Products, Orders & Auth -->
+<section class="cm-quick-hub">
+  <div class="cm-hub-grid">
+    <!-- Card 1: All Products -->
+    <div class="cm-hub-card">
+      <div class="cm-hub-header">
+        <div class="cm-hub-icon-box cm-hub-icon-products">
+          🛍️
+        </div>
+        <span class="cm-hub-pill cm-pill-primary">
+          <%= @total_products.to_i > 0 ? "#{@total_products} Available" : "Marketplace" %>
+        </span>
+      </div>
+      <h3 class="cm-hub-title">Explore All Products</h3>
+      <p class="cm-hub-desc">
+        Browse current student listings across textbooks, lab equipment, monitors, dorm fridges, and scooters.
+      </p>
+      <%= link_to products_path, class: "cm-hub-action-link" do %>
+        <span>All products</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      <% end %>
+    </div>
+
+    <!-- Card 2: All Orders -->
+    <div class="cm-hub-card">
+      <div class="cm-hub-header">
+        <div class="cm-hub-icon-box cm-hub-icon-orders">
+          📦
+        </div>
+        <span class="cm-hub-pill cm-pill-info">
+          <%= @total_orders.to_i > 0 ? "#{@total_orders} Orders" : "History" %>
+        </span>
+      </div>
+      <h3 class="cm-hub-title">Order Management</h3>
+      <p class="cm-hub-desc">
+        Track your placed orders, see campus delivery or meetup confirmations, and monitor seller receipts.
+      </p>
+      <%= link_to (defined?(orders_path) ? orders_path : products_path), class: "cm-hub-action-link" do %>
+        <span>All Orders</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      <% end %>
+    </div>
+
+    <!-- Card 3: Sell or Account Hub -->
+    <div class="cm-hub-card">
+      <div class="cm-hub-header">
+        <div class="cm-hub-icon-box cm-hub-icon-sell">
+          🏷️
+        </div>
+        <span class="cm-hub-pill cm-pill-success">
+          <%= authenticated? ? "Active Account" : "Free Sign Up" %>
+        </span>
+      </div>
+      <% if authenticated? && Current.user %>
+        <h3 class="cm-hub-title">Ready to Sell?</h3>
+        <p class="cm-hub-desc">
+          List your course notes, textbooks, desk gadgets, or dorm appliances directly to classmates.
+        </p>
+        <%= link_to new_product_path, class: "cm-hub-action-link" do %>
+          <span>Post New Listing</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        <% end %>
+      <% else %>
+        <h3 class="cm-hub-title">Student Account</h3>
+        <p class="cm-hub-desc">
+          Sign up with your campus email to list items, message buyers, and track purchases securely.
+        </p>
+        <%= link_to signup_path, class: "cm-hub-action-link" do %>
+          <span>Create Free Account</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<!-- Popular Campus Categories -->
+<section class="cm-section" id="categories">
+  <div class="cm-section-header">
+    <div>
+      <span class="cm-section-tag">Campus Categories</span>
+      <h2 class="cm-section-title">Popular Categories</h2>
+      <p class="cm-section-desc">Find what students on campus are trading today</p>
+    </div>
+    <%= link_to "View All Catalog →", products_path, class: "cm-btn cm-btn-secondary cm-btn-sm" %>
+  </div>
+
+  <div class="cm-categories-grid">
+    <%= link_to products_path(category: "Textbooks"), class: "cm-category-card" do %>
+      <div class="cm-cat-emoji">📚</div>
+      <div class="cm-cat-name">Textbooks</div>
+      <div class="cm-cat-badge">Notes & Guides</div>
+    <% end %>
+
+    <%= link_to products_path(category: "Electronics"), class: "cm-category-card" do %>
+      <div class="cm-cat-emoji">💻</div>
+      <div class="cm-cat-name">Electronics</div>
+      <div class="cm-cat-badge">Calculators & Tech</div>
+    <% end %>
+
+    <%= link_to products_path(category: "Dorm"), class: "cm-category-card" do %>
+      <div class="cm-cat-emoji">🛋️</div>
+      <div class="cm-cat-name">Dorm Living</div>
+      <div class="cm-cat-badge">Lamps, Rugs & Fridges</div>
+    <% end %>
+
+    <%= link_to products_path(category: "Bikes"), class: "cm-category-card" do %>
+      <div class="cm-cat-emoji">🚲</div>
+      <div class="cm-cat-name">Cycles & Wheels</div>
+      <div class="cm-cat-badge">Bikes, Skateboards</div>
+    <% end %>
+
+    <%= link_to products_path(category: "Apparel"), class: "cm-category-card" do %>
+      <div class="cm-cat-emoji">👕</div>
+      <div class="cm-cat-name">Campus Merch</div>
+      <div class="cm-cat-badge">Hoodies & Gear</div>
+    <% end %>
+
+    <%= link_to products_path(category: "Stationery"), class: "cm-category-card" do %>
+      <div class="cm-cat-emoji">✏️</div>
+      <div class="cm-cat-name">Stationery</div>
+      <div class="cm-cat-badge">Supplies & Art</div>
+    <% end %>
+  </div>
+</section>
+
+<!-- Featured / Recent Listings -->
+<section class="cm-section">
+  <div class="cm-section-header">
+    <div>
+      <span class="cm-section-tag">Marketplace Highlights</span>
+      <h2 class="cm-section-title">Featured Listings</h2>
+      <p class="cm-section-desc">Freshly listed items by your fellow students</p>
+    </div>
+    <%= link_to "Browse All products →", products_path, class: "cm-btn cm-btn-primary cm-btn-sm" %>
+  </div>
+
+  <div class="cm-products-grid">
+    <% if @products.present? && @products.any? %>
+      <% @products.each do |product| %>
+        <div class="cm-product-card">
+          <div class="cm-product-thumb">
+            <% if product.categorie.to_s.downcase.include?('book') || product.name.to_s.downcase.include?('book') %>
+              📖
+            <% elsif product.categorie.to_s.downcase.include?('tech') || product.categorie.to_s.downcase.include?('elec') %>
+              💻
+            <% elsif product.categorie.to_s.downcase.include?('cycle') || product.categorie.to_s.downcase.include?('bike') %>
+              🚲
+            <% else %>
+              📦
+            <% end %>
+            <div class="cm-product-badge">Campus Verified</div>
+          </div>
+          <div class="cm-product-body">
+            <span class="cm-product-cat"><%= product.categorie.presence || "General" %></span>
+            <h4 class="cm-product-title"><%= product.name %></h4>
+            <div class="cm-product-footer">
+              <div class="cm-product-price">
+                $<%= sprintf("%.2f", product.price.to_f) %>
+              </div>
+              <%= link_to "View Item", product_path(product), class: "cm-btn cm-btn-secondary cm-btn-sm" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <!-- Student Sample Preview Listings when DB is empty -->
+      <div class="cm-product-card">
+        <div class="cm-product-thumb">
+          📚
+          <div class="cm-product-badge">Available</div>
+        </div>
+        <div class="cm-product-body">
+          <span class="cm-product-cat">Textbooks</span>
+          <h4 class="cm-product-title">Calculus Early Transcendentals (8th Ed)</h4>
+          <div class="cm-product-footer">
+            <div class="cm-product-price">$35.00</div>
+            <%= link_to "View Item", products_path, class: "cm-btn cm-btn-secondary cm-btn-sm" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="cm-product-card">
+        <div class="cm-product-thumb">
+          🚲
+          <div class="cm-product-badge">Like New</div>
+        </div>
+        <div class="cm-product-body">
+          <span class="cm-product-cat">Cycles</span>
+          <h4 class="cm-product-title">Campus Commuter Road Bike + U-Lock</h4>
+          <div class="cm-product-footer">
+            <div class="cm-product-price">$80.00</div>
+            <%= link_to "View Item", products_path, class: "cm-btn cm-btn-secondary cm-btn-sm" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="cm-product-card">
+        <div class="cm-product-thumb">
+          🎧
+          <div class="cm-product-badge">Verified</div>
+        </div>
+        <div class="cm-product-body">
+          <span class="cm-product-cat">Electronics</span>
+          <h4 class="cm-product-title">Noise-Cancelling Wireless Headphones</h4>
+          <div class="cm-product-footer">
+            <div class="cm-product-price">$45.00</div>
+            <%= link_to "View Item", products_path, class: "cm-btn cm-btn-secondary cm-btn-sm" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="cm-product-card">
+        <div class="cm-product-thumb">
+          🛋️
+          <div class="cm-product-badge">Dorm Life</div>
+        </div>
+        <div class="cm-product-body">
+          <span class="cm-product-cat">Dorm Living</span>
+          <h4 class="cm-product-title">Adjustable LED Desk Lamp + USB Charger</h4>
+          <div class="cm-product-footer">
+            <div class="cm-product-price">$18.00</div>
+            <%= link_to "View Item", products_path, class: "cm-btn cm-btn-secondary cm-btn-sm" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="cm-section" id="how-it-works">
+  <div class="cm-section-header">
+    <div>
+      <span class="cm-section-tag">Simple & Safe</span>
+      <h2 class="cm-section-title">How Campus Mart Works</h2>
+      <p class="cm-section-desc">Trading within your university community has never been easier</p>
+    </div>
+  </div>
+
+  <div class="cm-features-grid">
+    <div class="cm-feature-box">
+      <div class="cm-feature-icon">📸</div>
+      <h3 class="cm-feature-title">1. List in Under a Minute</h3>
+      <p class="cm-feature-text">
+        Take a picture of your unused textbooks or gear, enter your student price, and list it for classmates to discover.
+      </p>
+    </div>
+
+    <div class="cm-feature-box">
+      <div class="cm-feature-icon">🤝</div>
+      <h3 class="cm-feature-title">2. Meet on Campus</h3>
+      <p class="cm-feature-text">
+        Connect securely with fellow students and arrange a quick handoff at the library, dining hall, or campus center.
+      </p>
+    </div>
+
+    <div class="cm-feature-box">
+      <div class="cm-feature-icon">🎉</div>
+      <h3 class="cm-feature-title">3. Keep 100% of Your Money</h3>
+      <p class="cm-feature-text">
+        No middleman fees, no shipping wait times, and no packaging waste. Just fast, friendly campus trades.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Bottom CTA Banner -->
+<section class="cm-section" style="margin-bottom: 5rem;">
+  <div style="background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); border-radius: var(--cm-radius-lg); padding: 3.5rem 2rem; color: #ffffff; text-align: center; box-shadow: var(--cm-shadow-xl); position: relative; overflow: hidden;">
+    <div style="position: relative; z-index: 1; max-width: 650px; margin: 0 auto;">
+      <h2 style="font-size: 2.35rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.02em;">
+        Ready to explore what's for sale on campus?
+      </h2>
+      <p style="color: #c7d2fe; font-size: 1.1rem; margin-bottom: 2rem; line-height: 1.6;">
+        Join students buying and selling every day. Check out all listings or manage your orders right now.
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <%= link_to "Browse All products", products_path, class: "cm-btn cm-btn-primary cm-btn-lg", style: "background: #ffffff; color: #4338ca !important;" %>
+        <%= link_to "View All Orders", (defined?(orders_path) ? orders_path : products_path), class: "cm-btn cm-btn-secondary cm-btn-lg", style: "background: rgba(255,255,255,0.12); color: #ffffff !important; border-color: rgba(255,255,255,0.25);" %>
+        <% unless authenticated? %>
+          <%= link_to "Create Student Account", signup_path, class: "cm-btn cm-btn-accent cm-btn-lg" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</section>

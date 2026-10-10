@@ -1,12 +1,41 @@
-<div id="<%= dom_id order %>">
-  <p>
-    <strong>Total:</strong>
-    <%= order.total %>
-  </p>
+<div id="<%= dom_id order %>" style="background: var(--cm-surface); border: 1px solid var(--cm-border); border-radius: var(--cm-radius-lg); padding: 1.5rem; margin-bottom: 1.25rem; box-shadow: var(--cm-shadow-sm);">
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; border-bottom: 1px solid var(--cm-surface-subtle); padding-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+    <div>
+      <span style="font-size: 0.8rem; font-weight: 700; color: var(--cm-primary); text-transform: uppercase;">Order #<%= order.id %></span>
+      <div style="font-size: 1.05rem; font-weight: 700; color: var(--cm-text-main); margin-top: 0.2rem;">
+        Buyer: <%= order.user&.name.presence || "Student (User ##{order.user_id})" %>
+      </div>
+      <div style="font-size: 0.8rem; color: var(--cm-text-muted);">
+        Placed on <%= order.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+      </div>
+    </div>
+    <div style="text-align: right;">
+      <span class="cm-badge" style="margin-bottom: 0.25rem;">Confirmed</span>
+      <div style="font-size: 1.4rem; font-weight: 800; color: var(--cm-text-main);">
+        $<%= sprintf("%.2f", order.total.to_f) %>
+      </div>
+    </div>
+  </div>
 
-  <p>
-    <strong>User:</strong>
-    <%= order.user_id %>
-  </p>
-
+  <% if order.line_items.any? %>
+    <div style="margin-top: 0.75rem;">
+      <h5 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; color: var(--cm-text-muted); margin-bottom: 0.5rem;">Items in Order:</h5>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.4rem;">
+        <% order.line_items.each do |item| %>
+          <li style="display: flex; justify-content: space-between; font-size: 0.925rem; background: var(--cm-surface-subtle); padding: 0.5rem 0.85rem; border-radius: var(--cm-radius-sm);">
+            <div>
+              <strong><%= item.product&.name || "Product ##{item.product_id}" %></strong>
+              <span style="color: var(--cm-text-muted); font-size: 0.85rem;"> × <%= item.quantity || 1 %></span>
+              <% if item.product&.categorie.present? %>
+                <span class="cm-hub-pill cm-pill-primary" style="margin-left: 0.5rem; font-size: 0.7rem;"><%= item.product.categorie %></span>
+              <% end %>
+            </div>
+            <div style="font-weight: 700;">
+              $<%= sprintf("%.2f", item.total_price) %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 </div>

@@ -1,10 +1,32 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "#{@product.name} - Campus Mart" %>
 
-<%= render @product %>
+<div class="cm-section" style="padding-top: 3rem;">
+  <% if notice %>
+    <div class="cm-alert cm-alert-success" style="max-width: 680px; margin: 0 auto 1.5rem;">
+      <%= notice %>
+    </div>
+  <% end %>
 
-<div>
-  <%= link_to "Edit this product", edit_product_path(@product) %> |
-  <%= link_to "Back to products", products_path %>
+  <div style="max-width: 680px; margin: 0 auto; background: var(--cm-surface); border: 1px solid var(--cm-border); border-radius: var(--cm-radius-lg); padding: 2rem; box-shadow: var(--cm-shadow-md);">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <span class="cm-hub-pill cm-pill-primary" style="margin-bottom: 0.5rem; display: inline-block;">
+          <%= @product.categorie.presence || "Campus Essential" %>
+        </span>
+        <h2 style="font-size: 2rem; font-weight: 800; color: var(--cm-text-main);"><%= @product.name %></h2>
+      </div>
+      <div style="font-size: 2.2rem; font-weight: 800; color: var(--cm-primary);">
+        $<%= sprintf("%.2f", @product.price.to_f) %>
+      </div>
+    </div>
 
-  <%= button_to "Destroy this product", @product, method: :delete %>
+    <div style="border-top: 1px solid var(--cm-surface-subtle); padding-top: 1.5rem; margin-top: 1.5rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+      <%= link_to new_order_path(product_id: @product.id), class: "cm-btn cm-btn-primary cm-btn-lg" do %>
+        <span>🛍️ Order This Product</span>
+      <% end %>
+      <%= link_to "Edit Listing", edit_product_path(@product), class: "cm-btn cm-btn-secondary" %>
+      <%= link_to "← Back to Products", products_path, class: "cm-btn cm-btn-secondary" %>
+      <%= button_to "Delete Listing", @product, method: :delete, class: "cm-btn cm-btn-secondary", style: "color: #dc2626 !important;", data: { turbo_confirm: "Are you sure?" } %>
+    </div>
+  </div>
 </div>

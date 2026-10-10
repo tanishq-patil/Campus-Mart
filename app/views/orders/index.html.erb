@@ -1,16 +1,45 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "All Orders - Campus Mart" %>
 
-<% content_for :title, "Orders" %>
+<section class="cm-section" style="padding-top: 3rem;">
+  <div class="cm-section-header">
+    <div>
+      <span class="cm-section-tag">Campus Transactions</span>
+      <h2 class="cm-section-title">All Orders</h2>
+      <p class="cm-section-desc">Track and review student marketplace orders</p>
+    </div>
+    <%= link_to "+ Place New Order", new_order_path, class: "cm-btn cm-btn-primary cm-btn-sm" %>
+  </div>
 
-<h1>Orders</h1>
-
-<div id="orders">
-  <% @orders.each do |order| %>
-    <%= render order %>
-    <p>
-      <%= link_to "Show this order", order %>
-    </p>
+  <% if notice %>
+    <div class="cm-alert cm-alert-success" style="max-width: 800px; margin: 0 auto 1.5rem;">
+      <%= notice %>
+    </div>
   <% end %>
-</div>
 
-<%= link_to "New order", new_order_path %>
+  <div style="max-width: 800px; margin: 0 auto;">
+    <% if @orders.any? %>
+      <div id="orders">
+        <% @orders.each do |order| %>
+          <div style="position: relative;">
+            <%= render order %>
+            <div style="text-align: right; margin-top: -0.75rem; margin-bottom: 1.5rem;">
+              <%= link_to "View Order Details →", order, class: "cm-btn cm-btn-secondary cm-btn-sm" %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div style="background: var(--cm-surface); border: 1px dashed var(--cm-border); border-radius: var(--cm-radius-lg); padding: 3.5rem 2rem; text-align: center;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">📦</div>
+        <h3 style="font-size: 1.35rem; font-weight: 700; margin-bottom: 0.5rem;">No Orders Placed Yet</h3>
+        <p style="color: var(--cm-text-muted); margin-bottom: 1.5rem; max-width: 450px; margin-left: auto; margin-right: auto;">
+          Ready to purchase textbooks or dorm gear? Pick an item from the marketplace to start.
+        </p>
+        <div style="display: flex; gap: 0.75rem; justify-content: center;">
+          <%= link_to "Browse Products", products_path, class: "cm-btn cm-btn-secondary" %>
+          <%= link_to "Create an Order", new_order_path, class: "cm-btn cm-btn-primary" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>

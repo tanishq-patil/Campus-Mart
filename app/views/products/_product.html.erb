@@ -1,17 +1,39 @@
-<div id="<%= dom_id product %>">
-  <p>
-    <strong>Name:</strong>
-    <%= product.name %>
-  </p>
+<div id="<%= dom_id product %>" class="cm-product-card">
+  <div class="cm-product-thumb">
+    <% cat = product.categorie.to_s.downcase %>
+    <% name = product.name.to_s.downcase %>
+    <% if cat.include?('book') || name.include?('book') %>
+      📖
+    <% elsif cat.include?('tech') || cat.include?('elec') || name.include?('laptop') || name.include?('phone') || name.include?('headphone') %>
+      💻
+    <% elsif cat.include?('cycle') || cat.include?('bike') %>
+      🚲
+    <% elsif cat.include?('dorm') || cat.include?('furn') || name.include?('chair') || name.include?('desk') || name.include?('lamp') %>
+      🛋️
+    <% elsif cat.include?('cloth') || cat.include?('apparel') || name.include?('hoodie') || name.include?('jacket') %>
+      👕
+    <% elsif cat.include?('stat') || name.include?('pen') || name.include?('calc') || name.include?('note') %>
+      ✏️
+    <% else %>
+      📦
+    <% end %>
+    <div class="cm-product-badge">Campus Verified</div>
+  </div>
 
-  <p>
-    <strong>Categorie:</strong>
-    <%= product.categorie %>
-  </p>
+  <div class="cm-product-body">
+    <span class="cm-product-cat"><%= product.categorie.presence || "General" %></span>
+    <h3 class="cm-product-title">
+      <%= link_to product.name, product_path(product) %>
+    </h3>
 
-  <p>
-    <strong>Price:</strong>
-    <%= product.price %>
-  </p>
-
+    <div class="cm-product-footer">
+      <div class="cm-product-price">
+        $<%= sprintf("%.2f", product.price.to_f) %>
+      </div>
+      <div class="cm-product-actions" style="display: flex; gap: 0.5rem; align-items: center;">
+        <%= link_to "View", product_path(product), class: "cm-btn cm-btn-secondary cm-btn-sm" %>
+        <%= link_to "Order", new_order_path(product_id: product.id), class: "cm-btn cm-btn-primary cm-btn-sm" rescue nil %>
+      </div>
+    </div>
+  </div>
 </div>

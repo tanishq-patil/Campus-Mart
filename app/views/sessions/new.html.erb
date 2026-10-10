@@ -1,0 +1,46 @@
+<% content_for :title, "Sign In - Campus Mart" %>
+
+<div class="cm-auth-container">
+  <div class="cm-auth-card">
+    <div class="cm-auth-header">
+      <div class="cm-logo-icon" style="margin: 0 auto 1rem;">🎓</div>
+      <h2 class="cm-auth-title">Welcome Back</h2>
+      <p class="cm-auth-subtitle">Sign in to your Campus Mart student account</p>
+    </div>
+
+    <% if flash[:alert] %>
+      <div class="cm-alert cm-alert-error">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
+
+    <% if flash[:notice] %>
+      <div class="cm-alert cm-alert-success">
+        <%= flash[:notice] %>
+      </div>
+    <% end %>
+
+    <%= form_with url: session_path, method: :post, class: "cm-auth-form" do |form| %>
+      <div class="cm-form-group">
+        <%= form.label :email_address, "Student Email Address", class: "cm-label" %>
+        <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "student@university.edu", class: "cm-input", value: params[:email_address] %>
+      </div>
+
+      <div class="cm-form-group">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <%= form.label :password, "Password", class: "cm-label" %>
+        </div>
+        <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", class: "cm-input" %>
+      </div>
+
+      <div class="cm-form-actions">
+        <%= form.submit "Sign In to Campus Mart", class: "cm-btn cm-btn-primary cm-btn-block" %>
+      </div>
+    <% end %>
+
+    <div class="cm-auth-footer">
+      <p>New to Campus Mart? <%= link_to "Create an account", signup_path, class: "cm-auth-link" %></p>
+      <p style="margin-top: 0.5rem;"><%= link_to "← Back to Marketplace", root_path, class: "cm-text-muted" %></p>
+    </div>
+  </div>
+</div>
