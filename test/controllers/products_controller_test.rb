@@ -10,6 +10,16 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "should get index with search query" do
+    get products_url, params: { query: "MyString" }
+    assert_response :success
+  end
+
+  test "should get index with category and sort" do
+    get products_url, params: { category: "Books", sort: "price_asc" }
+    assert_response :success
+  end
+
   test "should get new" do
     get new_product_url
     assert_response :success

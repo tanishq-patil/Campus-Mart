@@ -38,6 +38,24 @@
           <%= link_to "All Orders", orders_path, class: "cm-nav-link #{'active' if current_page?(orders_path)}" rescue link_to "All Orders", products_path, class: "cm-nav-link" %>
         </nav>
 
+        <!-- Navbar Quick Search -->
+        <div class="cm-nav-search-wrap">
+          <%= form_with url: products_path, method: :get, local: true, class: "cm-nav-search-form" do |f| %>
+            <div class="cm-nav-search-box">
+              <svg class="cm-nav-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <%= f.text_field :query, value: (params[:query] if current_page?(products_path)), placeholder: "Search campus items...", class: "cm-nav-search-input" %>
+              <button type="submit" class="cm-nav-search-submit" aria-label="Search">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </button>
+            </div>
+          <% end %>
+        </div>
+
         <div class="cm-nav-actions">
           <% if authenticated? && Current.user %>
             <div class="cm-user-menu">

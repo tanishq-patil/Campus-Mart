@@ -26,6 +26,32 @@
       No expensive shipping, zero fees, and hassle-free handoffs right at the library or dorms.
     </p>
 
+    <!-- Prominent Hero Search Bar -->
+    <div class="cm-hero-search-wrapper">
+      <%= form_with url: products_path, method: :get, local: true, class: "cm-hero-search-form" do |f| %>
+        <div class="cm-hero-search-inner">
+          <div class="cm-hero-search-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+          <%= f.text_field :query, placeholder: "Search textbooks, calculators, dorm fridges, bikes...", class: "cm-hero-search-input" %>
+          <%= f.submit "Search Market", class: "cm-hero-search-btn" %>
+        </div>
+      <% end %>
+
+      <!-- Trending Quick Search Tags -->
+      <div class="cm-hero-trending">
+        <span class="cm-trending-label">🔥 Trending on Campus:</span>
+        <%= link_to "Calculus", products_path(query: "Calculus"), class: "cm-trending-tag" %>
+        <%= link_to "Road Bike", products_path(query: "Bike"), class: "cm-trending-tag" %>
+        <%= link_to "Calculator", products_path(query: "Calculator"), class: "cm-trending-tag" %>
+        <%= link_to "Dorm Lamp", products_path(query: "Lamp"), class: "cm-trending-tag" %>
+        <%= link_to "Notebooks", products_path(query: "Notes"), class: "cm-trending-tag" %>
+      </div>
+    </div>
+
     <!-- Main Navigation Action Links (Preserving & Highlighting User's Links) -->
     <div class="cm-hero-actions">
       <%= link_to products_path, class: "cm-btn cm-btn-primary cm-btn-lg" do %>

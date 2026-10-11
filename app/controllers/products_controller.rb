@@ -5,14 +5,26 @@ class ProductsController < ApplicationController
   # GET /products or /products.json
   def index
     @products = Product.all
+
     if params[:category].present? && params[:category] != "All"
       @products = @products.where("LOWER(categorie) LIKE ?", "%#{params[:category].downcase}%")
     end
+
     if params[:query].present?
-      q = "%#{params[:query].downcase}%"
+      q = "%#{params[:query].strip.downcase}%"
       @products = @products.where("LOWER(name) LIKE ? OR LOWER(categorie) LIKE ?", q, q)
     end
-    @products = @products.order(created_at: :desc)
+
+    case params[:sort]
+    when "price_asc"
+      @products = @products.order(price: :asc)
+    when "price_desc"
+      @products = @products.order(price: :desc)
+    when "name_asc"
+      @products = @products.order(name: :asc)
+    else
+      @products = @products.order(created_at: :desc)
+    end
   end
 
   # GET /products/1 or /products/1.json
