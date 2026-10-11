@@ -1,11 +1,15 @@
-<% content_for :title, "New product" %>
+<% content_for :title, "Post New Item - Campus Mart" %>
 
-<h1>New product</h1>
+<%= link_to products_path, class: "back-link" do %>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+  Back to Products
+<% end %>
 
-<%= render "form", product: @product %>
+<div class="form-card">
+  <div class="form-header">
+    <h1 class="form-title">Post a New Item</h1>
+    <p class="form-subtitle">Fill in the details below to publish your listing for campus buyers.</p>
+  </div>
 
-<br>
-
-<div>
-  <%= link_to "Back to products", products_path %>
+  <%= render "form", product: @product %>
 </div>
