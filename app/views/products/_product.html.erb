@@ -1,21 +1,8 @@
-<div id="<%= dom_id product %>" class="product-card" data-name="<%= (product.name || '').downcase %>" data-category="<%= (product.categorie || '').downcase %>">
-  <div class="card-header-thumb">
-    <span class="category-badge">
-      <%= product.categorie.presence || "General" %>
-    </span>
-    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.6">
-      <% cat_lower = (product.categorie || '').downcase %>
-      <% if cat_lower.include?('book') || cat_lower.include?('text') %>
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
-      <% elsif cat_lower.include?('elect') || cat_lower.include?('tech') || cat_lower.include?('phone') || cat_lower.include?('laptop') %>
-        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line>
-      <% elsif cat_lower.include?('cloth') || cat_lower.include?('wear') || cat_lower.include?('shirt') %>
-        <path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 00.99.84H6v10a2 2 0 002 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.47a2 2 0 00-1.34-2.23z"></path>
-      <% else %>
-        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line>
-      <% end %>
-    </svg>
-  </div>
+<div id="<%= dom_id product %>" class="product-card">
+  <p>
+    <strong>Name:</strong>
+    <%= product.name %>
+  </p>
 
   <div class="card-body">
     <h3 class="product-title"><%= product.name.presence || "Untitled Product" %></h3>
