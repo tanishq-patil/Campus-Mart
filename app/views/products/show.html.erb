@@ -1,10 +1,62 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "#{@product.name} - Campus Mart" %>
 
-<%= render @product %>
+<%= link_to products_path, class: "back-link" do %>
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+  Back to Campus Listings
+<% end %>
 
-<div>
-  <%= link_to "Edit this product", edit_product_path(@product) %> |
-  <%= link_to "Back to products", products_path %>
+<div class="detail-card">
+  <div class="detail-banner">
+    <div style="text-align: center;">
+      <span class="category-badge" style="position: relative; top: 0; left: 0; display: inline-block; margin-bottom: 0.75rem;">
+        <%= @product.categorie.presence || "General" %>
+      </span>
+      <h1 style="font-size: 1.85rem; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.2);"><%= @product.name %></h1>
+    </div>
+  </div>
 
-  <%= button_to "Destroy this product", @product, method: :delete %>
+  <div class="detail-body">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+      <div>
+        <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;">Asking Price</span>
+        <div class="detail-price">$<%= sprintf("%.2f", @product.price || 0) %></div>
+      </div>
+      <div>
+        <span class="badge" style="background: var(--accent-light); color: var(--accent); padding: 0.4rem 0.85rem; border-radius: 999px; font-weight: 700; font-size: 0.85rem;">
+          Available for Pickup
+        </span>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div>
+        <div class="detail-item-title">Product Name</div>
+        <div class="detail-item-value"><%= @product.name %></div>
+      </div>
+      <div>
+        <div class="detail-item-title">Category</div>
+        <div class="detail-item-value"><%= @product.categorie.presence || "Uncategorized" %></div>
+      </div>
+      <div>
+        <div class="detail-item-title">Date Listed</div>
+        <div class="detail-item-value"><%= @product.created_at ? @product.created_at.strftime("%B %d, %Y at %I:%M %p") : "N/A" %></div>
+      </div>
+      <div>
+        <div class="detail-item-title">Last Updated</div>
+        <div class="detail-item-value"><%= @product.updated_at ? time_ago_in_words(@product.updated_at) + " ago" : "N/A" %></div>
+      </div>
+    </div>
+
+    <div class="form-actions" style="margin-top: 2rem;">
+      <%= link_to edit_product_path(@product), class: "btn btn-primary" do %>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        Edit Product Details
+      <% end %>
+
+      <%= button_to @product, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "Are you sure you want to remove '#{@product.name}' from Campus Mart?" } do %>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+        Delete Listing
+      <% end %>
+    </div>
+  </div>
 </div>
